@@ -1,56 +1,60 @@
 
-## OpenAppFilter功能简介
 
-OpenAppFilter模块基于数据流深度识别技术，实现对单个app进行管控的功能，并支持上网记录统计
+应用过滤是一款基于OpenWrt的家长管理插件，支持游戏、视频、聊天、下载等app过滤  
 
-### 主要使用场景
-	- 家长对小孩上网行为进行管控，限制小孩玩游戏等
-	- 限制员工使用某些app， 如视频、招聘、购物、游戏、常用网站等
-	- 记录终端的上网记录，实时了解当前app使用情况，比如xxx正在访问抖音
-	
+
+### 如何编译应用过滤固件
+1. 准备OpenWrt源码，并编译成功  
+   推荐源码仓库：  
+   https://github.com/coolsnowwolf/lede.git  
+   如果用官方源码，不要用master分支，因为luci版本不兼容，推荐18.06版本。  
+2. clone应用过滤源码到OpenWrt源码package目录  
+git clone https://github.com/destan19/OpenAppFilter.git package/OpenAppFilter  
+3. make menuconfig 开启应用过滤插件宏  
+    在OpenWrt源码目录执行make menuconfig，进入luci app菜单选择luci-app-oaf保存  
+4. 编译生成固件  
+    make V=s   
+### 使用说明
+1. 将应用过滤设备做主路由 
+2. 关闭软硬加速、广告过滤、QOS、多WAN等涉及到nf_conn mark的模块,高通的AX系列产品需要将ecm允许慢速转发的包个数调整到最大值，直接stop ecm会导致吞吐非常低。
+3. 开启应用过滤并选择需要过滤的app即可生效  
+
+### 如何自定义特征码
+https://zhuanlan.zhihu.com/p/419053529  
+
+### 特征库下载地址
+https://destan19.github.io/feature/
+
+### 深度优化的上网行为管理系统FROS  
+基于OpenAppFilter开发了一套行为管理系统，全新架构  
+支持应用过滤、网址过滤、端口过滤、防沉迷、游戏记录等  
+官网： www.ifros.cn  
+
+### 演示视频 
+抖音(douyin)号： linux4096 (linux开发者-derry)  
+
 ### 插件截图
-#### 1
-![main1](https://github.com/destan19/images/blob/master/oaf/main1.png)
+![](https://github.com/destan19/picture/blob/main/oaf1.jpg)
+
+![](https://github.com/destan19/picture/blob/main/oaf2.jpg)
+
+![](https://github.com/destan19/picture/blob/main/oaf3.jpg)
 
 
-#### 2
-![main2](https://github.com/destan19/images/blob/master/oaf/main2.png)
+App filtering is a parent management plug-in based on OpenWrt, which supports app filtering for games, videos, chats, downloads, etc.
+### How to compile application filtering firmware
+1. Prepare OpenWrt source code and compile successfully  
+    Recommended source code repository:  
+    https://github.com/coolsnowwolf/lede.git  
+    If you use the official source code, do not use the master branch, because the luci version is not compatible, version 18.06 is recommended.  
+2. Clone the application filtering source code to the OpenWrt source code package directory  
+git clone https://github.com/destan19/OpenAppFilter.git package/OpenAppFilter  
+3. make menuconfig to open the application filter plug-in macro  
+     Execute make menuconfig in the OpenWrt source code directory, enter the luci app menu and select luci-app-oaf to save  
+4. Compile and generate firmware  
+     make V=s  
+### Instructions for use
+1. Make the application filtering device the main route  
+2. Turn off software and hardware acceleration, advertising filtering, QOS, multi-WAN and other modules related to nf_conn mark  
+3. Turn on application filtering and select the app that needs to be filtered to take effect  
 
-### 支持app列表(只列主流)
- - 游戏
-   王者荣耀 英雄联盟 欢乐斗地主 梦幻西游 明日之后 ...
- - 音乐
- - 购物
-   淘宝 京东 唯品会 拼多多 苏宁易购
- - 聊天
-	QQ 微信 钉钉 
- - 招聘
- - 视频
-   抖音小视频 斗鱼直播 腾讯视频 爱奇艺 火山小视频 YY 微视 虎牙直播 快手 小红书 ...
-
-## 编译说明
-1. 下载OpenWrt源码，并完成编译(OpenWrt公众号有相关教程）
-> git clone https://github.com/coolsnowwolf/lede.git  
-> 或 https://github.com/openwrt/openwrt.git  
-2. 下载应用过滤源码放到OpenWrt的package 目录
-> cd package  
-git clone https://github.com/destan19/OpenAppFilter.git  
-cd -
-3. make menuconfig, 在luci app中选上luci oaf app模块并保存 
-4. make V=s 编译出带应用过滤功能的OpenWrt固件 
-
-### 备注 
-在lede中编译，需要去除加速模块，可以直接删除或者make menuconfig不编译加速模块  
- rm package/lean/luci-app-flowoffload -fr   
- rm package/lean/shortcut-fe/ -fr   
- rm package/lean/luci-app-sfe/ -fr   
-
-## 存在的问题
-- 该模块只工作在路由模式， 旁路模式、桥模式不生效  
-- 存在小概率误判的情况，特别是同一个公司的app，比如淘宝、支付宝等，如果需要过滤，建议相似的app全部勾选  
-- 暂不兼容OpenWrt主干的luci，如果报错，请使用老一点的版本（OpenWrt18.06或lean 的lede源码）  
-## 技术支持
-
-- 微信公众号: OpenWrt (获取应用过滤最新固件和OpenWrt教程)
-
-- 技术交流QQ群（1000人）: 943396288
